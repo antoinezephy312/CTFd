@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+  <title>{{ title or Configs.ctf_name }}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="{{ Configs.ctf_small_icon }}" type="image/x-icon">
+
+  {{ meta | safe }}
+
+  <script>document.documentElement.setAttribute('data-bs-theme','dark');</script>
+
+  {% block stylesheets %}
+    {{ Assets.css("assets/scss/main.scss") }}
+  {% endblock %}
+
+  {{ Plugins.styles }}
+
+  {{ Assets.js("assets/js/color_mode_switcher.js", type=None) }}
+
+  <script type="text/javascript">
+      window.init = {
+          'urlRoot': "{{ request.script_root }}",
+          'csrfNonce': "{{ Session.nonce }}",
+          'userMode': "{{ Configs.user_mode }}",
+          'userId': {{ Session.id }},
+          'userName': {{ User.name | tojson }},
+          'userEmail': {{ User.email | tojson }},
+          'userVerified': {{ User.verified | tojson }},
+          'teamId': {{ Team.id | tojson }},
+          'teamName': {{ Team.name | tojson }},
+          'start': {{ Configs.start | tojson }},
+          'end': {{ Configs.end | tojson }},
+          'themeSettings': {{ Configs.theme_settings | tojson }},
+          'eventSounds': [
+            "/themes/core/static/sounds/notification.webm",
+            "/themes/core/static/sounds/notification.mp3",
+          ],
+      }
+  </script>
+
+  {{ Configs.theme_header }}
+</head>
+<body>
+<canvas id="matrix-bg" aria-hidden="true"></canvas>
+
+{% include "components/navbar.html" %}
+
+<main role="main">
+  {% block content %}
+  {% endblock %}
+</main>
+
+{% include "components/snackbar.html" %}
+
+<footer class="footer">
+  <div class="container text-center">
+    <a href="https://ctfd.io" class="text-secondary">
+      <small class="text-muted">
+        {% trans %}Powered by CTFd{% endtrans %}
+      </small>
+    </a>
+  </div>
+</footer>
+
+{% include "components/notifications.html" %}
+
+{% block scripts %}
+  {{ Assets.js("assets/js/page.js") }}
+{% endblock %}
+
+{{ Plugins.scripts }}
+
+{{ Configs.theme_footer }}
+
+<script>
+(function () {
+  var canvas = document.getElementById('matrix-bg');
+  if (!canvas) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var ctx = canvas.getContext('2d');
+  var fontSize = 13;
+  var drops = [];
+  var columns = 0;
+
+  // Mix of katakana + hex + symbols for hacker feel
+  var chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFabcdef<>{}[]|/\\;:!@#%^&*+-=~';
+  var charArr = chars.split('');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    columns = Math.floor(canvas.width / fontSize);
+    // Preserve existing drops, fill new columns randomly off-screen
+    while (drops.length < columns) {
+      drops.push(Math.floor(Math.random() * -80));
+    }
+    drops.length = columns;
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw() {
+    // Dim the canvas slightly each frame — creates the trailing fade
+    ctx.fillStyle = 'rgba(8, 12, 16, 0.08)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = fontSize + 'px "Share Tech Mono", monospace';
+
+    for (var i = 0; i < columns; i++) {
+      var y = drops[i] * fontSize;
+      if (y < 0) { drops[i]++; continue; }
+
+      var ch = charArr[Math.floor(Math.random() * charArr.length)];
+
+      // Leading character — bright white flash
+      if (Math.random() > 0.96) {
+        ctx.fillStyle = '#e8fff0';
+      } else {
+        // Randomise brightness for depth
+        var alpha = 0.15 + Math.random() * 0.45;
+        ctx.fillStyle = 'rgba(0, 255, 65, ' + alpha + ')';
+      }
+
+      ctx.fillText(ch, i * fontSize, y);
+
+      // Randomly reset column when it goes off-screen
+      if (y > canvas.height && Math.random() > 0.975) {
+        drops[i] = Math.floor(Math.random() * -40);
+      } else {
+        drops[i]++;
+      }
+    }
+  }
+
+  // ~24fps — visible but not CPU-heavy
+  setInterval(draw, 42);
+}());
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+@use "~/@fontsource/share-tech-mono/scss/mixins" as ShareTechMono;
+@use "~/@fontsource/orbitron/scss/mixins" as Orbitron;
+
+@include ShareTechMono.faces($directory: "../webfonts", $weights: 400, $subsets: latin);
+
+@include Orbitron.faces($directory: "../webfonts", $weights: 400, $subsets: latin);
+@include Orbitron.faces($directory: "../webfonts", $weights: 700, $subsets: latin);
+@include Orbitron.faces($directory: "../webfonts", $weights: 900, $subsets: latin);
+
+$fa-font-path: "../webfonts";
+@import "~/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~/@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~/@fortawesome/fontawesome-free/scss/brands.scss";
+
+html,
+body,
+.container {
+  font-family: "Share Tech Mono", "Courier New", monospace;
+}

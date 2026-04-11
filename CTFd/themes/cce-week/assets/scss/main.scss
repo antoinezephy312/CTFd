@@ -1,0 +1,136 @@
+@use "bootstrap/scss/bootstrap" as * with (
+  // Colors
+  $primary:                     #00f0ff,
+  $secondary:                   #7b2fff,
+  $success:                     #00ff41,
+  $info:                        #00c8ff,
+  $warning:                     #ffcc00,
+  $danger:                      #ff003c,
+  $dark:                        #0d1117,
+  $light:                       #1a2332,
+
+  // Body
+  $body-bg:                     #080c10,
+  $body-color:                  #c0cfe0,
+
+  // Typography
+  $font-family-base:            '"Share Tech Mono", "Courier New", monospace',
+  $font-family-monospace:       '"Share Tech Mono", "Courier New", monospace',
+  $headings-font-family:        '"Orbitron", "Share Tech Mono", monospace',
+  $headings-font-weight:        700,
+
+  // Borders — sharp corners for hacker aesthetic
+  $border-radius:               0rem,
+  $border-radius-sm:            0rem,
+  $border-radius-lg:            0rem,
+  $border-radius-xl:            0rem,
+  $border-radius-xxl:           0rem,
+  $border-color:                rgba(0, 240, 255, 0.2),
+
+  // Cards
+  $card-bg:                     #0d1117,
+  $card-border-color:           rgba(0, 240, 255, 0.25),
+  $card-cap-bg:                 #080c10,
+
+  // Inputs
+  $input-bg:                    #080c10,
+  $input-color:                 #c0cfe0,
+  $input-border-color:          rgba(0, 240, 255, 0.3),
+  $input-focus-border-color:    #00f0ff,
+  $input-focus-box-shadow:      0 0 0 0.2rem rgba(0, 240, 255, 0.25),
+  $input-placeholder-color:     #4a6080,
+
+  // Navbar
+  $navbar-dark-color:           rgba(0, 240, 255, 0.7),
+  $navbar-dark-hover-color:     #00f0ff,
+  $navbar-dark-active-color:    #00f0ff,
+  $navbar-dark-brand-color:     #00f0ff,
+
+  // Tables
+  $table-color:                 #c0cfe0,
+  $table-border-color:          rgba(0, 240, 255, 0.15),
+  $table-striped-bg:            rgba(0, 240, 255, 0.03),
+  $table-hover-bg:              rgba(0, 240, 255, 0.07),
+
+  // Modals
+  $modal-content-bg:            #0d1117,
+  $modal-content-border-color:  rgba(0, 240, 255, 0.3),
+  $modal-backdrop-bg:           #000,
+  $modal-backdrop-opacity:      0.85,
+
+  // Links
+  $link-color:                  #00f0ff,
+  $link-hover-color:            #ffffff,
+
+  // Dropdowns
+  $dropdown-bg:                 #0d1117,
+  $dropdown-border-color:       rgba(0, 240, 255, 0.25),
+  $dropdown-link-color:         #c0cfe0,
+  $dropdown-link-hover-bg:      rgba(0, 240, 255, 0.1),
+  $dropdown-link-hover-color:   #00f0ff,
+
+  // Forms
+  $form-select-bg:              #080c10,
+  $form-select-color:           #c0cfe0,
+  $form-select-border-color:    rgba(0, 240, 255, 0.3),
+
+  // Component active
+  $component-active-bg:         #00f0ff,
+  $component-active-color:      #080c10
+);
+
+@use "includes/components/table";
+@use "includes/components/jumbotron";
+@use "includes/components/challenge";
+@use "includes/components/sticky-footer";
+@use "includes/components/graphs";
+
+@use "includes/utils/fonts";
+@use "includes/utils/opacity";
+@use "includes/utils/min-height";
+@use "includes/utils/cursors";
+@use "includes/utils/lolight";
+@use "includes/utils/cyberpunk";
+
+@use "includes/icons/award-icons";
+@use "includes/icons/flag-icons";
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Orbitron", "Share Tech Mono", monospace;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+blockquote {
+  border-left: 4px solid $secondary;
+  padding-left: 15px;
+}
+
+input,
+select {
+  padding: 0.6rem !important;
+  height: auto !important;
+}
+
+.fa-spin.spinner {
+  text-align: center;
+  opacity: 0.5;
+}
+
+.badge-notification {
+  vertical-align: top;
+  margin-left: -1.5em;
+  font-size: 50%;
+}
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%2300f0ff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e");
+  background-size: 8px 10px;
+}

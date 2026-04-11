@@ -1,0 +1,47 @@
+// Cyberpunk code syntax highlighting
+.ll-nam {
+  /* identifiers */
+  color: #c0cfe0;
+}
+
+.ll-num {
+  /* numbers */
+  color: #7b2fff;
+}
+
+.ll-str {
+  /* strings */
+  color: #00ff41;
+}
+
+.ll-rex {
+  /* regular expressions */
+  color: #00f0ff;
+}
+
+.ll-pct {
+  /* operators, punctuation */
+  color: #4a6080;
+}
+
+.ll-key {
+  /* keywords */
+  color: #ff003c;
+}
+
+.ll-com {
+  /* comments */
+  color: #4a6080;
+  font-style: italic;
+}
+
+// Dark mode reinforcement (theme is always dark, but keep for compatibility)
+[data-bs-theme="dark"] {
+  .ll-nam { color: #c0cfe0; }
+  .ll-num { color: #7b2fff; }
+  .ll-str { color: #00ff41; }
+  .ll-rex { color: #00f0ff; }
+  .ll-pct { color: #4a6080; }
+  .ll-key { color: #ff003c; }
+  .ll-com { color: #4a6080; font-style: italic; }
+}
