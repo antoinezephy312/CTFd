@@ -3,6 +3,10 @@ import CTFd from "../compat/CTFd";
 import $ from "jquery";
 import "../compat/json";
 import { ezAlert } from "../compat/ezq";
+import echarts from "echarts/dist/echarts.common";
+import dayjs from "dayjs";
+import { colorHash } from "../compat/styles";
+import { cumulativeSum } from "../compat/math";
 
 const api_func = {
   users: (x, y) => CTFd.api.patch_user_public({ userId: x }, y),
@@ -99,7 +103,110 @@ function bulkToggleAccounts(_event) {
   });
 }
 
+function buildChart(targetId, data, title) {
+  const target = document.getElementById(targetId);
+  if (!target) return null;
+
+  const option = {
+    title: {
+      left: "center",
+      text: title,
+    },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: { type: "cross" },
+    },
+    legend: {
+      type: "scroll",
+      orient: "horizontal",
+      align: "left",
+      bottom: 35,
+      data: [],
+    },
+    toolbox: {
+      feature: {
+        dataZoom: { yAxisIndex: "none" },
+        saveAsImage: {},
+      },
+    },
+    grid: { containLabel: true },
+    xAxis: [{ type: "time", boundaryGap: false, data: [] }],
+    yAxis: [{ type: "value" }],
+    dataZoom: [
+      {
+        id: "dataZoomX",
+        type: "slider",
+        xAxisIndex: [0],
+        filterMode: "filter",
+        height: 20,
+        top: 35,
+        fillerColor: "rgba(233, 236, 241, 0.4)",
+      },
+    ],
+    series: [],
+  };
+
+  const entries = Object.keys(data);
+  for (let i = 0; i < entries.length; i++) {
+    const entry = data[entries[i]];
+    const scores = [];
+    const times = [];
+    for (let j = 0; j < entry.solves.length; j++) {
+      scores.push(entry.solves[j].value);
+      times.push(dayjs(entry.solves[j].date).toDate());
+    }
+    const cumulative = cumulativeSum(scores);
+    option.legend.data.push(entry.name);
+    option.series.push({
+      name: entry.name,
+      type: "line",
+      label: { normal: { position: "top" } },
+      itemStyle: { normal: { color: colorHash(entry.name + entry.id) } },
+      data: times.map((t, idx) => [t, cumulative[idx]]),
+    });
+  }
+
+  const chart = echarts.init(target);
+  chart.setOption(option, true);
+  $(window).on("resize", () => chart && chart.resize());
+  return chart;
+}
+
+async function loadChart(targetId, url, title) {
+  try {
+    const response = await CTFd.fetch(url, { method: "GET" });
+    const json = await response.json();
+    if (json.success) {
+      buildChart(targetId, json.data, title);
+    }
+  } catch (e) {
+    console.error("Failed to load scoreboard chart", e);
+  }
+}
+
 $(() => {
   $(".scoreboard-toggle").click(toggleAccount);
   $("#scoreboard-edit-button").click(bulkToggleAccounts);
+
+  const mode = CTFd.config.userMode;
+
+  if (mode === "teams") {
+    // Teams chart loads immediately (tab is active)
+    loadChart("score-graph", "/api/v1/scoreboard/top/10", "Top 10 Teams");
+
+    // Users chart loads when the Users tab is first shown
+    let userChartLoaded = false;
+    $('a[href="#user-standings"]').on("shown.bs.tab", function () {
+      if (!userChartLoaded) {
+        userChartLoaded = true;
+        loadChart(
+          "user-score-graph",
+          "/api/v1/scoreboard/top/10?type=users",
+          "Top 10 Users (Individual)",
+        );
+      }
+    });
+  } else {
+    loadChart("score-graph", "/api/v1/scoreboard/top/10", "Top 10 Users");
+  }
 });

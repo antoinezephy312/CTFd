@@ -47,7 +47,6 @@
         >
           <option :value="false">Hidden</option>
           <option :value="true">Anonymized</option>
-          <option value="preview">Preview</option>
         </select>
       </div>
 
@@ -75,7 +74,7 @@ export default {
       challenges: [],
       requirements: {},
       selectedRequirements: [],
-      selectedAnonymize: null,
+      selectedAnonymize: false,
     };
   },
   computed: {
@@ -166,8 +165,8 @@ export default {
         },
       };
 
-      if (this.selectedAnonymize !== null) {
-        params.requirements.anonymize = this.selectedAnonymize;
+      if (this.selectedAnonymize) {
+        params.requirements.anonymize = true;
       }
 
       CTFd.fetch(`/api/v1/challenges/${this.$props.challenge_id}`, {

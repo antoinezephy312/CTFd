@@ -42,10 +42,12 @@
 		<div class="col-md-12 table-responsive">
 			<div class="tab-content">
 				<div class="tab-pane fade show active" id="standings" role="tabpanel">
+					<div id="score-graph" style="width: 100%; height: 450px;" class="mb-4"></div>
 					{% include "admin/scoreboard/standings.html" %}
 				</div>
 				{% if Configs.user_mode == UserModeTypes.TEAMS %}
 				<div class="tab-pane fade" id="user-standings" role="tabpanel">
+					<div id="user-score-graph" style="width: 100%; height: 450px;" class="mb-4"></div>
 					{% include "admin/scoreboard/users.html" %}
 				</div>
 				{% endif %}
