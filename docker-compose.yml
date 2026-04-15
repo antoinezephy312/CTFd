@@ -29,6 +29,55 @@ services:
         default:
         internal:
 
+  # Challenge Containers
+  challenge-8001:
+    build: ../challenges
+    restart: always
+    ports:
+      - "8001:5000"
+    networks:
+      - default
+
+  challenge-8002:
+    build: ../challenges
+    restart: always
+    ports:
+      - "8002:5000"
+    networks:
+      - default
+
+  challenge-8003:
+    build: ../challenges
+    restart: always
+    ports:
+      - "8003:5000"
+    networks:
+      - default
+
+  challenge-8004:
+    build: ../challenges
+    restart: always
+    ports:
+      - "8004:5000"
+    networks:
+      - default
+
+  challenge-8005:
+    build: ../challenges
+    restart: always
+    ports:
+      - "8005:5000"
+    networks:
+      - default
+
+  challenge-8006:
+    build: ../challenges
+    restart: always
+    ports:
+      - "8006:5000"
+    networks:
+      - default
+
   # TODO: CTFd 4.0 Migrate to named volumes. Users will likely need to manually migrate existing files
   permissions:
     image: alpine:3.23
