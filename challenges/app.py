@@ -1,6 +1,10 @@
-from flask import Flask, render_template_string
+import os
+
+from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
+
+DEFAULT_PORT = "5000"
 
 CHALLENGE_INFO = {
     "8001": {
@@ -65,7 +69,13 @@ HTML_TEMPLATE = """
 
 @app.route('/')
 def index():
-    port = app.config.get('PORT', '5000')
+    forwarded_port = request.headers.get("X-Forwarded-Port")
+    if forwarded_port:
+        port = forwarded_port
+    else:
+        host = request.host or ""
+        port = host.rsplit(":", 1)[-1] if ":" in host else os.getenv("PORT", DEFAULT_PORT)
+
     challenge = CHALLENGE_INFO.get(port, {
         "name": "Unknown Challenge",
         "description": "Challenge details not found",
