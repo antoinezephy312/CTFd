@@ -31,6 +31,7 @@ nh3==0.3.0
 freezegun==1.5.5
 Flask-Babel==2.0.0
 Pillow==12.1.1
-cffi==1.17.1
+cffi==1.17.1; python_version < "3.14"
+cffi==2.0.0; python_version >= "3.14"
 six==1.17.0
 urllib3==2.6.0

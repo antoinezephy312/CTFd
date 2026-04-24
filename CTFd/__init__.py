@@ -3,7 +3,7 @@ import os
 import sys
 import time
 import weakref
-from distutils.version import StrictVersion
+from packaging.version import Version
 
 import jinja2
 from flask import Flask, Request
@@ -300,7 +300,7 @@ def create_app(config="CTFd.config.Config"):
         version = utils.get_config("ctf_version")
 
         # Upgrading from an older version of CTFd
-        if version and (StrictVersion(version) < StrictVersion(__version__)):
+        if version and (Version(version) < Version(__version__)):
             if confirm_upgrade():
                 run_upgrade()
             else:
